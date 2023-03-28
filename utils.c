@@ -6,14 +6,13 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/03/27 16:05:39 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/03/27 16:05:41 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/03/28 19:08:16 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_abs(int num)
+#include "fractol.h"
+
+int	get_color(t_fractol *frac, int i)
 {
-	if (num < 0)
-		return (num * -1);
-	else
-		return (num);
+	return (frac->r * i << 24 | frac->g * i << 16 | frac->b * i << 8 | 250);
 }
