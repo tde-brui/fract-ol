@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/03/27 15:24:52 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/03/28 20:35:35 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/04/07 10:54:56 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,65 +30,40 @@ int	init_fractol(t_fractol	*data)
 		exit(EXIT_FAILURE);
 	}
 	data->zoom = 1;
+	data->offset_x = 2;
+	data->offset_y = 2;
 	data->r = 2;
 	data->g = 4;
 	data->b = 6;
-	data->a = 250;
+	data->jul_x = 0;
+	data->jul_y = 0;
 	return (EXIT_SUCCESS);
 }
 
-void	ft_scroll(double delta_x, double delta_y, void *param)
+int	main(int argc, char **argv)
 {
 	t_fractol	*fractol;
 
-	fractol = param;
-	delta_x = 0;
-	if (delta_y > 0)
-		fractol->zoom *= 1.1;
-	else if (delta_y < 0)
-		fractol->zoom *= 0.9;
-}
-
-void	ft_hook(void *param)
-{
-	t_fractol	*fractol;
-
-	fractol = param;
-	if (mlx_is_key_down(fractol->mlx, MLX_KEY_ESCAPE))
-		mlx_close_window(fractol->mlx);
-	if (mlx_is_key_down(fractol->mlx, MLX_KEY_RIGHT))
-		fractol->image->instances[0].x += 5;
-	if (mlx_is_key_down(fractol->mlx, MLX_KEY_LEFT))
-		fractol->image->instances[0].x -= 5;
-	if (mlx_is_key_down(fractol->mlx, MLX_KEY_UP))
-		fractol->image->instances[0].y += 5;
-	if (mlx_is_key_down(fractol->mlx, MLX_KEY_DOWN))
-		fractol->image->instances[0].y -= 5;
-	if (mlx_is_key_down(fractol->mlx, MLX_KEY_C))
+	if (argc != 2 && argc != 4)
 	{
-		fractol->r += 2;
-		fractol->g += 2;
-		fractol->b += 2;
+		write(1, "Valid parameters are:\nmandelbrot\njulia\n", 40);
+		exit(EXIT_FAILURE);
 	}
-	if (mlx_is_key_down(fractol->mlx, MLX_KEY_X))
-	{
-		fractol->r -= 2;
-		fractol->g -= 2;
-		fractol->b -= 2;
-	}
-}
-
-int	main(void)
-{
-	t_fractol	*fractol;
-
 	fractol = malloc(sizeof(t_fractol));
 	if (!fractol)
-		exit(1);
+		exit(EXIT_FAILURE);
 	init_fractol(fractol);
-	mandelbrot(fractol);
-	mlx_loop_hook(fractol->mlx, ft_hook, fractol);
-	mlx_scroll_hook(fractol->mlx, ft_scroll, fractol);
+	if (argc == 2 && !ft_strncmp(argv[1], "mandelbrot", 13))
+		fractol->sign = 0;
+	else if (argc == 2 && !ft_strncmp(argv[1], "julia", 7))
+		fractol->sign = 1;
+	else
+	{
+		fractol->sign = 1;
+		fractol->jul_x = atof(argv[2]);
+		fractol->jul_y = atof(argv[3]);
+	}
+	ft_hooks(fractol);
 	mlx_loop(fractol->mlx);
 	free(fractol);
 	return (EXIT_SUCCESS);
