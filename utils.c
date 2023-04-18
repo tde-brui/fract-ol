@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/03/27 16:05:39 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/04/07 10:41:51 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/04/14 16:55:37 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,37 +17,50 @@ int	get_color(t_fractol *frac, int i)
 	return (frac->r * i << 24 | frac->g * i << 16 | frac->b * i << 8 | 250);
 }
 
+int	determine_sign(char c)
+{
+	if (c == '-')
+		return (-1);
+	else
+		return (1);
+}
+
 double	ft_atof(const char *str)
 {
 	int		i;
-	int		minuscounter;
-	double	result;
+	double	value;
+	double	power;
+	int		sign;
 
 	i = 0;
-	minuscounter = 0;
-	result = 0;
-	if (str[i] == 45 || str[i] == 43)
+	value = 0.0;
+	power = 1;
+	sign = 1;
+	if (str[i] == '+' || str[i] == '-')
+		sign = determine_sign(str[i++]);
+	while (ft_isdigit(str[i]))
 	{
-		if (str[i] == 45)
-			minuscounter++;
+		value = value * 10 + (str[i] - '0');
 		i++;
 	}
-	while (str[i] < 58 && str[i] > 47)
+	if (str[i] == '.')
+		i++;
+	while (ft_isdigit(str[i]))
 	{
-		result = (result * 10) + str[i] - 48;
+		value = value * 10 + (str[i] - '0');
+		power *= 10;
 		i++;
 	}
-	if (minuscounter % 2 == 1)
-		result *= -1;
-	return (result);
+	return (sign * value / power);
 }
 
 void	menu(t_fractol *fractol)
 {
-	mlx_put_string(fractol->mlx, "ZOOM IN: SCROLL FORWARD", 800, 30);
-	mlx_put_string(fractol->mlx, "ZOOM OUT: SCROLL BACKWARDS", 800, 70);
-	mlx_put_string(fractol->mlx, "PYSCHEDELIC: C or X", 800, 110);
-	mlx_put_string(fractol->mlx, "ZOOM OUT: SCROLL BACKWARDS", 800, 150);
-	mlx_put_string(fractol->mlx, "MOVE SCREEN: arrow keys", 800, 190);
-	mlx_put_string(fractol->mlx, "CLOSE WINDOW: ESC", 800, 230);
+	mlx_put_string(fractol->mlx, "ZOOM IN: SCROLL FORWARD", WIDTH - 300, 30);
+	mlx_put_string(fractol->mlx, "ZOOM OUT: SCROLL BACKWARDS", WIDTH - 300, 70);
+	mlx_put_string(fractol->mlx, "PYSCHEDELIC: C or X", WIDTH - 300, 110);
+	mlx_put_string(fractol->mlx, "ZOOM OUT: SCROLL BACKWARD", WIDTH - 300, 150);
+	mlx_put_string(fractol->mlx, "MOVE SCREEN: arrow keys", WIDTH - 300, 190);
+	mlx_put_string(fractol->mlx, "CLOSE WINDOW: ESC", WIDTH - 300, 230);
+	mlx_put_string(fractol->mlx, "MOVE JULIA SET: J and K", WIDTH - 300, 270);
 }

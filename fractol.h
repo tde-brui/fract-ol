@@ -6,7 +6,7 @@
 /*   By: tde-brui <tde-brui@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/03/27 15:16:14 by tde-brui      #+#    #+#                 */
-/*   Updated: 2023/04/07 10:41:43 by tde-brui      ########   odam.nl         */
+/*   Updated: 2023/04/18 14:13:45 by tde-brui      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <unistd.h>
 
 # define HEIGHT 1100
-# define WIDTH  1100
-# define MAX_ITERS 100
+# define WIDTH 1100
+# define MAX_ITERS 50
 
 typedef struct fractol{
 	mlx_t		*mlx;
@@ -35,8 +35,12 @@ typedef struct fractol{
 	int			sign;
 }t_fractol;
 
+// Fractol functions
 void	mandelbrot(t_fractol *fractol);
 void	julia(t_fractol *fractol);
+
+// Input validation
+int		check_input(int argc, char **av);
 
 // Hooks
 void	ft_scroll(double delta_x, double delta_y, void *param);
